@@ -674,10 +674,11 @@ class Task(object):
         sig.set_immutable(True)
         chord_id, request.chord = request.chord, None
         group_id, request.group = request.group, None
-        callbacks, request.callbacks = request.callbacks, [sig]
         if group_id or chord_id:
             sig.set(group=group_id, chord=chord_id)
-        sig |= callbacks[0]
+        if request.callbacks:
+            sig |= request.callbacks[0]
+        request.callbacks = [sig]
         return sig
 
     def apply(self, args=None, kwargs=None,
